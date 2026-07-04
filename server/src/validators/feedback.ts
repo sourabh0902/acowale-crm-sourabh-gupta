@@ -13,3 +13,11 @@ export const createFeedbackSchema = z.object({
 });
 
 export type CreateFeedbackInput = z.infer<typeof createFeedbackSchema>;
+
+export const listFeedbackQuerySchema = z.object({
+  category: z.enum(FEEDBACK_CATEGORIES).optional(),
+  range: z.enum(['7d', '30d', 'all']).optional(),
+  search: z.string().trim().optional(),
+});
+
+export type ListFeedbackQuery = z.infer<typeof listFeedbackQuerySchema>;

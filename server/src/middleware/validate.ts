@@ -1,4 +1,4 @@
-import { ZodSchema, ZodError } from 'zod';
+import { ZodSchema } from 'zod';
 import { Request, Response, NextFunction } from 'express';
 
 export function validate(schema: ZodSchema) {
