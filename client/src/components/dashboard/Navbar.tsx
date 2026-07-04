@@ -3,13 +3,14 @@
 import { useRouter } from "next/navigation";
 import { Menu, LogOut } from "lucide-react";
 import { useSidebar } from "./SidebarContext";
+import { clearToken } from "@/lib/auth";
 
 export default function Navbar() {
   const router = useRouter();
   const { toggle } = useSidebar();
 
   function handleLogout() {
-    console.log("logout");
+    clearToken();
     router.push("/login");
   }
 

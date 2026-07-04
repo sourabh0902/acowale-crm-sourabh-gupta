@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { z } from "zod";
+import { api } from "@/lib/api";
+import { setToken } from "@/lib/auth";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -12,15 +14,19 @@ const loginSchema = z.object({
 
 type LoginErrors = Partial<Record<"email" | "password", string>>;
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // Set when the user was redirected here from a protected page while logged out.
+  const redirectedForAuth = searchParams.get("reason") === "auth";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
+  const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const result = loginSchema.safeParse({ email, password });
@@ -35,15 +41,26 @@ export default function LoginPage() {
     }
 
     setErrors({});
+    setServerError("");
     setIsSubmitting(true);
 
-    // TODO: replace with real API call in Step 7
-    console.log({ email: result.data.email, password: result.data.password });
+    const response = await api<{
+      token: string;
+      user: { id: string; email: string; role: string };
+    }>("/auth/login", {
+      method: "POST",
+      body: { email: result.data.email, password: result.data.password },
+    });
 
-    // Simulate a network round-trip so the loading state is visible.
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 400);
+    setIsSubmitting(false);
+
+    if (!response.ok) {
+      setServerError(response.error);
+      return;
+    }
+
+    setToken(response.data.token);
+    router.push("/dashboard");
   }
 
   return (
@@ -56,6 +73,18 @@ export default function LoginPage() {
             </h1>
             <p className="mt-1 text-sm text-gray-500">Admin sign in</p>
           </div>
+
+          {redirectedForAuth && !serverError && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+              Please log in to access the dashboard.
+            </div>
+          )}
+
+          {serverError && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {serverError}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
             {/* Email */}
@@ -156,5 +185,14 @@ export default function LoginPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+// useSearchParams requires a Suspense boundary in the App Router.
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }

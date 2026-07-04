@@ -8,7 +8,7 @@ import {
   Tooltip,
   type PieSectorDataItem,
 } from "recharts";
-import { CATEGORY_COLORS, type FeedbackCategory } from "@/lib/mock-data";
+import { CATEGORY_COLORS, type FeedbackCategory } from "@/lib/feedback-helpers";
 
 type CategoryChartProps = {
   data: { category: FeedbackCategory; count: number }[];

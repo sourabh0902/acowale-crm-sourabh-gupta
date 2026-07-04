@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 const CATEGORIES = [
   "Product",
@@ -34,6 +35,7 @@ export default function Home() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [serverError, setServerError] = useState("");
 
   function updateField<K extends keyof FormData>(field: K, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -55,7 +57,7 @@ export default function Home() {
     return nextErrors;
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setShowSuccess(false);
 
@@ -64,29 +66,28 @@ export default function Home() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setIsSubmitting(true);
+    setServerError("");
 
-    // Placeholder for the real API call — logs the payload for now.
-    console.log(
-      "Feedback submission:",
-      JSON.stringify(
-        {
-          name: form.name.trim(),
-          email: form.email.trim(),
-          category: form.category,
-          message: form.message.trim(),
-        },
-        null,
-        2
-      )
-    );
+    const response = await api("/feedback", {
+      method: "POST",
+      body: {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        category: form.category,
+        message: form.message.trim(),
+      },
+    });
 
-    // Simulate a network round-trip.
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setShowSuccess(true);
-      setForm(EMPTY_FORM);
-      setErrors({});
-    }, 1000);
+    setIsSubmitting(false);
+
+    if (!response.ok) {
+      setServerError(response.error);
+      return;
+    }
+
+    setShowSuccess(true);
+    setForm(EMPTY_FORM);
+    setErrors({});
   }
 
   return (
@@ -121,6 +122,12 @@ export default function Home() {
                 />
               </svg>
               <span>Thanks! Your feedback has been submitted successfully.</span>
+            </div>
+          )}
+
+          {serverError && (
+            <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {serverError}
             </div>
           )}
 

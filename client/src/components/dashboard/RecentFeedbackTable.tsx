@@ -2,7 +2,7 @@ import {
   CATEGORY_COLORS,
   getRelativeTime,
   type Feedback,
-} from "@/lib/mock-data";
+} from "@/lib/feedback-helpers";
 import { truncate } from "@/lib/utils/Truncate";
 import EmptyState from "@/components/dashboard/EmptyState";
 

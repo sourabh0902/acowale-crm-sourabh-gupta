@@ -4,7 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { debounce } from "@/lib/debounce";
-import type { FeedbackCategory } from "@/lib/mock-data";
+import type { FeedbackCategory } from "@/lib/feedback-helpers";
 
 const CATEGORIES: FeedbackCategory[] = [
   "Product",
