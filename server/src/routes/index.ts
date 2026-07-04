@@ -12,10 +12,8 @@ import {
 
 const router = Router();
 
-// ---- Auth ----
 router.post('/auth/login', loginLimiter, validate(loginSchema), login);
 
-// ---- Feedback ----
 // Public — anyone can submit feedback
 router.post(
     '/feedback',

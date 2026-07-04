@@ -6,7 +6,6 @@ import type { AuthTokenPayload } from '../types/express';
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const header = req.headers.authorization;
 
-  // Expect "Bearer <token>" format
   if (!header || !header.startsWith('Bearer ')) {
     return res
       .status(401)

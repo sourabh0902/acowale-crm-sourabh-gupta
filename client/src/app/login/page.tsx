@@ -87,7 +87,6 @@ function LoginForm() {
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -114,7 +113,6 @@ function LoginForm() {
               )}
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -142,7 +140,6 @@ function LoginForm() {
               )}
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}

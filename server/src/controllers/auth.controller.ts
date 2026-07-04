@@ -23,7 +23,6 @@ export async function login(req: Request, res: Response) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Sign the JWT with user identity + role
     const token = jwt.sign(
       {
         sub: user._id.toString(),

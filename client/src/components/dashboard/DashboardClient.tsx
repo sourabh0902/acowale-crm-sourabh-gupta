@@ -70,8 +70,8 @@ export default function DashboardClient() {
     }
   }, [router]);
 
-  // Single fetch — all three params go to the backend together.
-  // Response drives card + chart + table. One data path, no splits.
+  // Single fetch — all three filters go to the backend together so one
+  // response drives card, chart, and table (no separate per-widget queries).
   const fetchFeedback = useCallback(async () => {
     setIsLoading(true);
     setError('');

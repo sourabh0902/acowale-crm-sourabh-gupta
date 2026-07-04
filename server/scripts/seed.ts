@@ -36,7 +36,6 @@ type SeedFeedback = {
 //   22 with email, 6 without
 
 const feedbackSeed: SeedFeedback[] = [
-  // ---- Recent (last 7 days) ----
   { name: 'Priya Sharma', email: 'priya.s@example.com', category: 'Product', message: 'The dashboard loads noticeably faster than last month. Whatever you changed, keep doing it.', createdAt: daysAgo(1) },
   { name: 'Marcus Chen', email: 'marcus.chen@example.com', category: 'Feature Request', message: 'Would love the ability to export filtered feedback to CSV. Right now I have to screenshot the table.', createdAt: daysAgo(1) },
   { name: 'Ananya Iyer', email: 'ananya.iyer@example.com', category: 'Support', message: 'I tried resetting my password twice but never got the email. Ended up creating a second account.', createdAt: daysAgo(2) },
@@ -46,7 +45,6 @@ const feedbackSeed: SeedFeedback[] = [
   { name: 'Rohan Kapoor', email: 'rohan.k@example.com', category: 'UI/UX', message: 'The mobile layout works but the search bar is a bit cramped on smaller phones. Consider stacking it.', createdAt: daysAgo(5) },
   { name: 'Sofia Alvarez', email: 'sofia.a@example.com', category: 'Product', message: 'Been using this for two weeks and haven\'t hit a single bug. Refreshing after some other tools I could name.', createdAt: daysAgo(6) },
 
-  // ---- Mid-range (7-30 days) ----
   { name: 'Karan Bhatia', email: 'karan.bhatia@example.com', category: 'Billing', message: 'My invoice shows a plan I don\'t recognize. Support ticket #4421 has been open a week with no reply.', createdAt: daysAgo(8) },
   { name: 'Emily Park', email: 'emily.park@example.com', category: 'Support', message: 'The onboarding docs skip a step between creating an account and inviting teammates. Confused me for a while.', createdAt: daysAgo(10) },
   { name: 'Neha Reddy', category: 'Feature Request', message: 'Dark mode. Please. My eyes at 11pm are begging.', createdAt: daysAgo(11) },
@@ -60,7 +58,6 @@ const feedbackSeed: SeedFeedback[] = [
   { name: 'Nikhil Joshi', email: 'nikhil.j@example.com', category: 'Feature Request', message: 'Bulk actions on the feedback table would save so much time. Even just \'mark multiple as read\'.', createdAt: daysAgo(27) },
   { name: 'Rachel Simmons', email: 'rachel.s@example.com', category: 'Billing', message: 'The pricing page could be clearer about what counts as an \'active user\'. Took me three reads.', createdAt: daysAgo(29) },
 
-  // ---- Older (30-60 days) ----
   { name: 'Vikram Desai', email: 'vikram.d@example.com', category: 'Support', message: 'The API docs example for POST /feedback has a wrong content-type header. Cost me an afternoon.', createdAt: daysAgo(33) },
   { name: 'Chloe Martin', email: 'chloe.m@example.com', category: 'Product', message: 'Solid v1. Doesn\'t try to do everything, does the important things well. That\'s harder than it looks.', createdAt: daysAgo(37) },
   { name: 'Arjun Pillai', category: 'Feature Request', message: 'Email notifications when new feedback comes in for a specific category. Would let me stop checking manually.', createdAt: daysAgo(41) },
@@ -85,21 +82,18 @@ async function seed() {
   await mongoose.connect(env.MONGODB_URI);
   console.log('✓ Connected');
 
-  // ---- Wipe existing data ----
   const deletedFeedback = await Feedback.deleteMany({});
   console.log(`  Deleted ${deletedFeedback.deletedCount} existing feedback documents`);
 
   const deletedUsers = await User.deleteMany({});
   console.log(`  Deleted ${deletedUsers.deletedCount} existing users`);
 
-  // ---- Insert feedback ----
   // NOTE: using `insertMany` skips Mongoose's default createdAt/updatedAt handling
   // for entries where we've set createdAt manually — but since our schema has
   // `{ timestamps: true }`, Mongoose will still auto-fill updatedAt.
   await Feedback.insertMany(feedbackSeed);
   console.log(`✓ Inserted ${feedbackSeed.length} feedback entries`);
 
-  // ---- Create admin user ----
   // The User model's pre-save hook automatically bcrypt-hashes the password.
   // We use .create() (not .insertMany) specifically so the pre-save hook runs.
   await User.create({

@@ -124,7 +124,6 @@ export default function Home() {
           )}
 
           <form onSubmit={handleSubmit} noValidate className="space-y-5">
-            {/* Name */}
             <div>
               <label
                 htmlFor="name"
@@ -153,7 +152,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -172,7 +170,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Category */}
             <div>
               <label
                 htmlFor="category"
@@ -216,7 +213,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Message */}
             <div>
               <div className="mb-1.5 flex items-baseline justify-between">
                 <label
@@ -257,7 +253,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isSubmitting}
