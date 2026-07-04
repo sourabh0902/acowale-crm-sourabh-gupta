@@ -4,16 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { debounce } from "@/lib/debounce";
-import type { FeedbackCategory } from "@/lib/feedback-helpers";
-
-const CATEGORIES: FeedbackCategory[] = [
-  "Product",
-  "Support",
-  "Billing",
-  "Feature Request",
-  "UI/UX",
-  "Other",
-];
+import { FEEDBACK_CATEGORIES } from "@/lib/feedback-helpers";
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -86,7 +77,7 @@ export default function FilterBar() {
           className="rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20"
         >
           <option value="all">All categories</option>
-          {CATEGORIES.map((c) => (
+          {FEEDBACK_CATEGORIES.map((c) => (
             <option key={c} value={c}>
               {c}
             </option>

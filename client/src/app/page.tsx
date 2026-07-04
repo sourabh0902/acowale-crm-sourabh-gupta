@@ -2,15 +2,7 @@
 
 import { useState } from "react";
 import { api } from "@/lib/api";
-
-const CATEGORIES = [
-  "Product",
-  "Support",
-  "Billing",
-  "Feature Request",
-  "UI/UX",
-  "Other",
-] as const;
+import { FEEDBACK_CATEGORIES } from "@/lib/feedback-helpers";
 
 const MESSAGE_MAX = 500;
 
@@ -207,7 +199,7 @@ export default function Home() {
                 <option value="" disabled>
                   Select a category
                 </option>
-                {CATEGORIES.map((category) => (
+                {FEEDBACK_CATEGORIES.map((category) => (
                   <option
                     key={category}
                     value={category}
