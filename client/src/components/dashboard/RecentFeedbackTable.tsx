@@ -1,10 +1,10 @@
-import Link from "next/link";
 import {
   CATEGORY_COLORS,
   getRelativeTime,
   type Feedback,
 } from "@/lib/mock-data";
 import { truncate } from "@/lib/utils/Truncate";
+import EmptyState from "@/components/dashboard/EmptyState";
 
 export default function RecentFeedbackTable({
   feedback,
@@ -15,16 +15,16 @@ export default function RecentFeedbackTable({
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-gray-700">Recent Feedback</p>
-        {/* <Link
-          href="/dashboard/feedback"
-          className="text-sm font-medium text-blue-600 hover:text-blue-700"
-        >
-          View all feedback →
-        </Link> */}
+      <div className="flex items-center gap-2">
+        <p className="text-sm font-medium text-gray-700">All Feedback</p>
+        <span className="text-sm text-gray-400">
+          · {feedback.length} {feedback.length === 1 ? "result" : "results"}
+        </span>
       </div>
 
+      {feedback.length === 0 ? (
+        <EmptyState />
+      ) : (
       <div className="mt-4 overflow-x-auto">
         <table className="w-full min-w-180 text-left">
           <thead>
@@ -85,6 +85,7 @@ export default function RecentFeedbackTable({
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }

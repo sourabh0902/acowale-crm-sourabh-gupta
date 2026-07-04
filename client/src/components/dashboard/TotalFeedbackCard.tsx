@@ -1,6 +1,12 @@
 import { MessageSquare } from "lucide-react";
 
-export default function TotalFeedbackCard({ total }: { total: number }) {
+export default function TotalFeedbackCard({
+  total,
+  subline = "All-time submissions",
+}: {
+  total: number;
+  subline?: string;
+}) {
   return (
     <div className="relative rounded-lg border border-gray-200 bg-white p-6">
       <MessageSquare
@@ -11,7 +17,7 @@ export default function TotalFeedbackCard({ total }: { total: number }) {
         Total Feedback
       </p>
       <p className="mt-2 text-4xl font-semibold text-gray-900">{total}</p>
-      <p className="mt-1 text-sm text-gray-500">All-time submissions</p>
+      <p className="mt-1 text-sm text-gray-500">{subline}</p>
     </div>
   );
 }
