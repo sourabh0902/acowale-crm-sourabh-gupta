@@ -6,8 +6,8 @@ import { requireAuth } from '../middleware/auth';
 import { createFeedbackSchema } from '../validators/feedback';
 import { loginSchema } from '../validators/auth';
 import {
-  feedbackSubmissionLimiter,
-  loginLimiter,
+    feedbackSubmissionLimiter,
+    loginLimiter,
 } from '../middleware/rateLimiter';
 
 const router = Router();
@@ -18,10 +18,10 @@ router.post('/auth/login', loginLimiter, validate(loginSchema), login);
 // ---- Feedback ----
 // Public — anyone can submit feedback
 router.post(
-  '/feedback',
-  feedbackSubmissionLimiter,
-  validate(createFeedbackSchema),
-  submitFeedback
+    '/feedback',
+    feedbackSubmissionLimiter,
+    validate(createFeedbackSchema),
+    submitFeedback
 );
 
 // Protected — only authenticated admin can view all feedback

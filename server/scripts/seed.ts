@@ -72,6 +72,15 @@ const feedbackSeed: SeedFeedback[] = [
 ];
 
 async function seed() {
+  // Explicit validation — seed vars are optional in the shared env schema,
+  // so we check them here (only the seed script needs them).
+  if (!env.SEED_ADMIN_EMAIL || !env.SEED_ADMIN_PASSWORD) {
+    console.error(
+      '✗ SEED_ADMIN_EMAIL and SEED_ADMIN_PASSWORD must be set in .env to run the seed script.'
+    );
+    process.exit(1);
+  }
+
   console.log('Connecting to MongoDB...');
   await mongoose.connect(env.MONGODB_URI);
   console.log('✓ Connected');
@@ -94,8 +103,8 @@ async function seed() {
   // The User model's pre-save hook automatically bcrypt-hashes the password.
   // We use .create() (not .insertMany) specifically so the pre-save hook runs.
   await User.create({
-    email: env.SEED_ADMIN_EMAIL,
-    password: env.SEED_ADMIN_PASSWORD,
+    email: env.SEED_ADMIN_EMAIL!,
+    password: env.SEED_ADMIN_PASSWORD!,
   });
   console.log(`✓ Created admin user: ${env.SEED_ADMIN_EMAIL}`);
   console.log('  (password not logged — check your .env file)');

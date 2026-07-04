@@ -1,12 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
-
-type JwtPayload = {
-  sub: string;
-  email: string;
-  role: 'admin';
-};
+import type { AuthTokenPayload } from '../types/express';
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
   const header = req.headers.authorization;
@@ -25,7 +20,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
   }
 
   try {
-    const decoded = jwt.verify(token, env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, env.JWT_SECRET) as AuthTokenPayload;
 
     // Basic shape check — a valid signature isn't enough if the payload is malformed
     if (!decoded.sub || !decoded.email || !decoded.role) {
